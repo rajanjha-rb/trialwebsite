@@ -77,7 +77,7 @@ export const useAuthStore = create<IAuthStore>()(
           // First, try to delete any existing sessions to prevent conflicts
           try {
             await account.deleteSessions();
-          } catch (error) {
+          } catch {
             // Ignore errors if no sessions exist
             console.log('No existing sessions to delete');
           }

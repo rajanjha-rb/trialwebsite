@@ -60,7 +60,7 @@ export default function Register() {
       if (loginResponse.error) {
         setError(`Account created successfully, but login failed: ${loginResponse.error.message}. Please try logging in manually.`);
       }
-    } catch (error) {
+    } catch {
       setError("An unexpected error occurred. Please try again.");
     }
 
