@@ -38,19 +38,30 @@ export default function Register() {
     setIsLoading(true);
     setError("");
 
-    const response = await createAccount(
-      name.toString(),
-      email.toString(),
-      password.toString()
-    );
+    try {
+      // First create the account
+      const response = await createAccount(
+        name.toString(),
+        email.toString(),
+        password.toString()
+      );
 
-    if (response.error) {
-      setError(response.error.message);
-    } else {
+      if (response.error) {
+        setError(response.error.message);
+        setIsLoading(false);
+        return;
+      }
+
+      // Add a small delay to ensure account creation is complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Then attempt to login
       const loginResponse = await login(email.toString(), password.toString());
       if (loginResponse.error) {
-        setError(loginResponse.error.message);
+        setError(`Account created successfully, but login failed: ${loginResponse.error.message}. Please try logging in manually.`);
       }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.");
     }
 
     setIsLoading(false);

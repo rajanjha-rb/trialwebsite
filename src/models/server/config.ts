@@ -2,16 +2,25 @@ import env from "@/app/env";
 
 import { Avatars, Client, Databases, Storage, Users } from "node-appwrite";
 
-const client = new Client();
+// Only create client if we have the required environment variables
+const createClient = () => {
+  if (!env.appwrite.endpoint || !env.appwrite.projectId || !env.appwrite.apikey) {
+    console.warn('Appwrite server environment variables not configured');
+    return null;
+  }
+  
+  return new Client()
+    .setEndpoint(env.appwrite.endpoint)
+    .setProject(env.appwrite.projectId)
+    .setKey(env.appwrite.apikey);
+};
 
-client
-  .setEndpoint(env.appwrite.endpoint) // Your API Endpoint
-  .setProject(env.appwrite.projectId) // Your project ID
-  .setKey(env.appwrite.apikey); // Your secret API key
+const client = createClient();
 
-const databases = new Databases(client);
-const avatars = new Avatars(client);
-const storage = new Storage(client);
-const users = new Users(client);
+// Only create services if client exists
+const databases = client ? new Databases(client) : null;
+const avatars = client ? new Avatars(client) : null;
+const storage = client ? new Storage(client) : null;
+const users = client ? new Users(client) : null;
 
 export { client, databases, users, avatars, storage };

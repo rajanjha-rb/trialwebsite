@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import { Inter } from "next/font/google";
+import SessionProvider from "./components/SessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
         <meta property="og:url" content="https://yourdomain.com/" />
       </head>
       <body>
+        <SessionProvider />
         <Navbar />
         {children}
         <Footer />

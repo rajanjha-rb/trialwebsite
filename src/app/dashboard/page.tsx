@@ -13,15 +13,20 @@ const PALETTE = {
 };
 
 export default function DashboardPage() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, hydrated } = useAuthStore();
   const router = useRouter();
 
-  // Redirect if not logged in
+  // Redirect if not logged in, but only after hydration
   React.useEffect(() => {
-    if (!user) {
+    if (hydrated && !user) {
       router.push("/login");
     }
-  }, [user, router]);
+  }, [user, router, hydrated]);
+
+  // Don't render anything until hydration is complete
+  if (!hydrated) {
+    return null;
+  }
 
   if (!user) {
     return null;

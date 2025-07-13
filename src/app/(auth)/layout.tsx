@@ -5,15 +5,22 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { session } = useAuthStore();
+  const { session, hydrated } = useAuthStore();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (session) {
+    // Only redirect after hydration is complete and session is confirmed
+    if (hydrated && session) {
       router.push("/");
     }
-  }, [session, router]);
+  }, [session, router, hydrated]);
 
+  // Don't render anything until hydration is complete
+  if (!hydrated) {
+    return null;
+  }
+
+  // Don't render auth pages if user is already logged in
   if (session) {
     return null;
   }
